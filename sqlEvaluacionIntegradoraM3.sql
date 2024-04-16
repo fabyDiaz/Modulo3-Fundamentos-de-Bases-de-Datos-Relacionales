@@ -66,20 +66,20 @@ Consulta para obtener el nombre de la moneda elegida por un usuario específico
 SELECT currency_name FROM monedas WHERE currency_name = 'dolar';
 
 /*
-Consulta para obtener las transacciones realizadas por un usuario específico
-*/
+Consulta para obtener las transacciones REALIZADAS por un usuario específico
+*/  
 SELECT
-    emisor.nombre AS 'emisor',
-    receptor.nombre AS 'receptor',
+    CASE WHEN emisor.user_id = 1 THEN emisor.nombre ELSE receptor.nombre END AS 'Emisor',
+    CASE WHEN emisor.user_id = 1 THEN receptor.nombre ELSE emisor.nombre END AS 'Receptor',
     transacciones.valor,
-    transacciones.transaction_date As 'Fecha transacción'
+    transacciones.transaction_date AS 'Fecha transacción'
 FROM
     Transacciones
 JOIN Usuarios AS emisor ON Transacciones.sender_user_id = emisor.user_id
 JOIN Usuarios AS receptor ON Transacciones.receiver_user_id = receptor.user_id
 WHERE
-    Transacciones.sender_user_id = 1;
-    
+    Transacciones.sender_user_id = 2 OR Transacciones.receiver_user_id = 2;
+
 /*
 Consulta para obtener todos los usuarios registrados
 */
@@ -114,8 +114,9 @@ SELECT
 FROM
     Transacciones
 JOIN Usuarios AS emisor ON Transacciones.sender_user_id = emisor.user_id
-JOIN Usuarios AS receptor ON Transacciones.receiver_user_id = receptor.user_id;
-
+JOIN Usuarios AS receptor ON Transacciones.receiver_user_id = receptor.user_id
+WHERE 
+	Transacciones.sender_user_id = 2;
 
 /*
 Sentencia DML para modificar el campo correo electrónico de un usuario específico
